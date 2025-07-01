@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { default as ComponentSearchInput } from '/src/components/SearchInput.jsx'
 import { default as ComponentHeadPicture } from '/src/components/HeadPicture.jsx';
-import { default as ComponentGridMessage } from '/src/components/GridMessage.jsx';
 import {default as ComponentTable } from '/src/components/AdminTable.jsx';
 
 import {

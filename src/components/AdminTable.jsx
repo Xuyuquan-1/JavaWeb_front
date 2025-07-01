@@ -22,6 +22,11 @@ const useStyle = createStyles(({ css, token }) => {
     };
 });
 
+function formatDate(timestamp) {
+    const date = new Date(timestamp + 8 * 60 * 60 * 1000); // 东八区调整
+    return date.toISOString().split('T')[0];
+}
+
 const studentcolumns = [
     {
         title: '学号',
@@ -163,8 +168,8 @@ const App = ({page}) => {
     useEffect(() => {
         switch(page) {
             case 'teacher': setSecondpage(teachercolumns); setPageUrl('http://localhost:8080/untitled/selectteacher'); break;
-            case 'student': setSecondpage(studentcolumns);setPageUrl('http://localhost:8080/untitled/selectteacher'); break;
-            case 'course': setSecondpage(coursecolumns); setPageUrl('http://localhost:8080/untitled/selectteacher'); break;
+            case 'student': setSecondpage(studentcolumns);setPageUrl('http://localhost:8080/untitled/selectstudent'); break;
+            case 'course': setSecondpage(coursecolumns); setPageUrl('http://localhost:8080/untitled/selectcourse'); break;
             default: setSecondpage(teachercolumns);
         }
     }, [page]);
@@ -179,7 +184,19 @@ const App = ({page}) => {
                 setLoading(true);
                 const response = await axios.get(pageUrl);
                 //赋值
-                setDataSource(response.data.data);
+                setDataSource(
+                    // response.data.data
+                    ()=> {
+                        if (page === 'course') {
+                            return response.data.data.map((item) => ({
+                                ...item,
+                                csdate: formatDate(item.csdate),
+                                cedate: formatDate(item.cedate),
+                            }));
+                        }
+                        return response.data.data;
+                    }
+                );
                 console.log("datasource: ",dataSource);
 
                 // 假设 API 返回的是数组格式数据
@@ -200,6 +217,9 @@ const App = ({page}) => {
             dataSource={dataSource}
             loading={loading}
             scroll={{ x: 'max-content', y: 51 * 13 }}
+            //why？注意这个
+            //在antd中每个数据对象会被渲染成一行
+            rowKey={record => record.sno || record.tno || record.cno}
         />
     );
 };

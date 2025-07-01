@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { default as ComponentSearchInput } from '/src/components/SearchInput.jsx'
 import { default as ComponentHeadPicture } from '/src/components/HeadPicture.jsx';
-import { default as ComponentGridMessage} from '/src/components/GridMessage.jsx';
+import { default as ComponentTable } from '/src/components/StudentTable.jsx';
 
 import {
     MenuFoldOutlined,
@@ -14,6 +14,17 @@ import {Button, Flex, Layout, Menu, theme} from 'antd';
 const { Header, Sider, Content } = Layout;
 const App = () => {
     const [collapsed, setCollapsed] = useState(false);
+    const [currentMenu, setCurrentMenu] = useState('score');
+
+    const MenuChange = (menuInfo) => {
+        switch(menuInfo.key) {
+            case '1':
+                setCurrentMenu('score');
+                break;
+        }
+        console.log("切换标签：",currentMenu);
+    }
+
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -29,17 +40,7 @@ const App = () => {
                         {
                             key: '1',
                             icon: <UserOutlined />,
-                            label: '成绩',
-                        },
-                        {
-                            key: '2',
-                            icon: <VideoCameraOutlined />,
-                            label: '课程',
-                        },
-                        {
-                            key: '3',
-                            icon: <UploadOutlined />,
-                            label: '教师信息',
+                            label: '我的成绩',
                         },
                     ]}
                 />
@@ -70,10 +71,12 @@ const App = () => {
                         borderRadius: borderRadiusLG,
                     }}
                 >
-                    <ComponentGridMessage fathertext={[
-                        ['11','12','13','14','15','16'],
-                        ['21','22','23','24','25','26'],
-                        ['31','32','33','34','35','36']]}/>
+                    {/*<ComponentGridMessage fathertext={[*/}
+                    {/*    ['11','12','13','14','15','16'],*/}
+                    {/*    ['21','22','23','24','25','26'],*/}
+                    {/*    ['31','32','33','34','35','36']]}/>*/}
+
+                    <ComponentTable page={currentMenu}/>
                 </Content>
 
             </Layout>
