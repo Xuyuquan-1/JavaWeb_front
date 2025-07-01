@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { default as ComponentSearchInput } from '/src/components/SearchInput.jsx'
 import { default as ComponentHeadPicture } from '/src/components/HeadPicture.jsx';
 import { default as ComponentGridMessage } from '/src/components/GridMessage.jsx';
-import {default as ComponentTable } from '/src/components/Table.jsx';
+import {default as ComponentTable } from '/src/components/AdminTable.jsx';
 
 import {
     MenuFoldOutlined,
@@ -12,12 +12,31 @@ import {
     VideoCameraOutlined,
 } from '@ant-design/icons';
 import {Button, Flex, Layout, Menu, theme} from 'antd';
+
 const { Header, Sider, Content } = Layout;
 const App = () => {
+    // ['teacher', 'student', 'course'];
+    const [currentMenu, setCurrentMenu] = useState('teacher')
     const [collapsed, setCollapsed] = useState(false);
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
+
+    const MenuChange = (menuInfo) => {
+        switch(menuInfo.key) {
+            case '1':
+                setCurrentMenu('teacher');
+                break;
+            case '2':
+                setCurrentMenu('student');
+                break;
+            case '3':
+                setCurrentMenu('course');
+                break;
+        }
+        console.log("切换标签：",currentMenu);
+    }
+
     return (
         <Layout style={{ minHeight: '98vh' }}>
             <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -43,6 +62,7 @@ const App = () => {
                             label: '课程信息',
                         },
                     ]}
+                    onClick={MenuChange}
                 />
             </Sider>
             <Layout>
@@ -75,7 +95,7 @@ const App = () => {
                     {/*    ['11','12','13','14','15','16'],*/}
                     {/*    ['21','22','23','24','25','26'],*/}
                     {/*    ['31','32','33','34','35','36']]}/>*/}
-                    <ComponentTable/>
+                    <ComponentTable page={currentMenu}/>
                 </Content>
 
             </Layout>
