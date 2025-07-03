@@ -27,6 +27,8 @@ function formatDate(timestamp) {
     return date.toISOString().split('T')[0];
 }
 
+
+
 const studentcolumns = [
     {
         title: '学号',
@@ -73,8 +75,8 @@ const teachercolumns = [
     {
         title: '教授学科',
         width: 150,
-        dataIndex: 'cno',
-        key: 'cno',
+        dataIndex: 'cname',
+        key: 'cname',
         fixed: 'left',
     },
     {
@@ -120,13 +122,13 @@ const teachercolumns = [
 ];
 
 const coursecolumns = [
-    {
-        title: '课程号',
-        width: 150,
-        dataIndex: 'cno',
-        key: 'cno',
-        fixed: 'left',
-    },
+        {
+            title: '课程号',
+            width: 150,
+            dataIndex: 'cno',
+            key: 'cno',
+            fixed: 'left',
+        },
         {
             title: '课程名',
             width: 150,
@@ -156,12 +158,13 @@ const coursecolumns = [
         },
     ];
 
-const App = ({page}) => {
+const App = ({page,searchvalue, dialogvalues}) => {
     const { styles } = useStyle();
     const [dataSource, setDataSource] = useState([]); // 替换原有的 const dataSource
     const [loading, setLoading] = useState(false); // 加载状态
     const [pageUrl, setPageUrl] = useState('http://localhost:8080/untitled/selectteacher');
-
+    //点击搜索
+    let searchText = searchvalue;
     //[teachercolumns, studentcolumns, coursecolumns]
     const [secondpage, setSecondpage] = useState(teachercolumns);
 
@@ -174,7 +177,8 @@ const App = ({page}) => {
         }
     }, [page]);
 
-    console.log("nowpage: ",secondpage);
+    // console.log("重新渲染nowpage: ",secondpage);
+    let baseUrl = 'http://localhost:8080/untitled/';
 
     // 组件挂载时获取数据
     useEffect(() => {
@@ -194,7 +198,7 @@ const App = ({page}) => {
                                 cedate: formatDate(item.cedate),
                             }));
                         }
-                        return response.data.data;
+                            return response.data.data;
                     }
                 );
                 console.log("datasource: ",dataSource);
@@ -208,7 +212,60 @@ const App = ({page}) => {
         };
 
         fetchData();
-    },[secondpage]);
+    },[secondpage,pageUrl]);
+
+    //添加数据
+    useEffect(
+        () => {
+            //
+            const submitData = async() => {
+                try {
+                    setLoading(true);
+                    const response = await axios.post(baseUrl+'add'+`${page}`, dialogvalues);
+                    console.log("URL",baseUrl+'add'+`${page}`);
+                    console.log("发送前Data: ",
+                        dialogvalues,
+                        {
+                            headers: {
+                                'Content-Type': 'application/json; charset=utf-8' // 明确指定编码
+                            }
+                        });
+                    console.log("response",response);
+                    setDataSource(()=> {
+                        return response.data.data;
+                    })
+                } catch (error) {
+                    console.error('Error searching data:', error);
+                    console.log("searchInput fault！！！");
+                } finally {
+                    setLoading(false);
+                }
+            }
+            submitData();
+        },[dialogvalues]);
+
+
+    //搜索框的hook
+    useEffect(()=> {
+        //
+        const searchData = async() => {
+            try {
+                setLoading(true);
+                const response = await axios.get(pageUrl+`?searchText=${searchText}`);
+                console.log("response",response);
+                setDataSource(()=> {
+                    return response.data.data;
+                })
+            } catch (error) {
+                console.error('Error searching data:', error);
+                console.log("searchInput fault！！！");
+            } finally {
+                setLoading(false);
+            }
+        };
+        searchData();
+
+    },[searchText]);
 
     return (
         <Table
@@ -219,7 +276,8 @@ const App = ({page}) => {
             scroll={{ x: 'max-content', y: 51 * 13 }}
             //why？注意这个
             //在antd中每个数据对象会被渲染成一行
-            rowKey={record => record.sno || record.tno || record.cno}
+            rowKey={record => `${page}_${record.sno || record.tno || record.cno}`}
+            // 示例生成 key: "student_20250001"、"teacher_1001"、"course_3001"
         />
     );
 };

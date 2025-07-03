@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { default as ComponentSearchInput } from '/src/components/SearchInput.jsx'
 import { default as ComponentHeadPicture } from '/src/components/HeadPicture.jsx';
 import {default as ComponentTable } from '/src/components/AdminTable.jsx';
+import {default as ComponentDialog } from '/src/components/Dialog.jsx';
 
 import {
     MenuFoldOutlined,
@@ -12,11 +13,15 @@ import {
 } from '@ant-design/icons';
 import {Button, Flex, Layout, Menu, theme} from 'antd';
 
+
 const { Header, Sider, Content } = Layout;
+
 const App = () => {
     // ['teacher', 'student', 'course'];
     const [currentMenu, setCurrentMenu] = useState('teacher')
     const [collapsed, setCollapsed] = useState(false);
+    const [searchvalue, setSearchvalue] = useState('');
+    const [dialogValues, setDialogValues] = useState({});
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -35,6 +40,19 @@ const App = () => {
         }
         console.log("切换标签：",currentMenu);
     }
+
+    const onSearch = (value) => {
+        setSearchvalue(value)
+        //value是文本框中的内容
+        console.log(searchvalue);
+    }
+
+    const submitFunc = (values) => { //values是个对象
+        setDialogValues(values);
+        console.log("提交表单：",dialogValues);
+    }
+
+
 
     return (
         <Layout style={{ minHeight: '98vh' }}>
@@ -77,11 +95,14 @@ const App = () => {
                                 height: 64,
                             }}
                         />
-                        <ComponentSearchInput fathertext={'请输入查找内容'}/>
+                        {/*搜索文本框*/}
+                        <ComponentSearchInput fathertext={'请输入查找内容'} onSearch={onSearch}/>
                             <ComponentHeadPicture />
                     </Flex>
                 </Header>
+
                 <Content
+
                     style={{
                         margin: '24px 16px',
                         padding: 24,
@@ -94,8 +115,11 @@ const App = () => {
                     {/*    ['11','12','13','14','15','16'],*/}
                     {/*    ['21','22','23','24','25','26'],*/}
                     {/*    ['31','32','33','34','35','36']]}/>*/}
-                    <ComponentTable page={currentMenu}/>
+                    <ComponentDialog submitfunc={submitFunc}/>
+                    <ComponentTable page={currentMenu} searchvalue={searchvalue} dialogvalues={dialogValues}/>
+
                 </Content>
+
 
             </Layout>
         </Layout>
