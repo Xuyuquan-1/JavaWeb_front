@@ -2,7 +2,7 @@ import {Modal, Form, Input, Button, Flex} from 'antd';
 import {useEffect, useState} from "react";
 // import axios from "axios";
 
-const App = ({submitfunc,pagetype, olddata}) => {
+const App = ({submitfunc,pagetype,page,olddata}) => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
 
@@ -61,7 +61,7 @@ const App = ({submitfunc,pagetype, olddata}) => {
         }
     };
 
-    if(pagetype === "add")
+    if(pagetype === "add" && page === "teacher")
     return (
 
 
@@ -131,7 +131,7 @@ const App = ({submitfunc,pagetype, olddata}) => {
         </>
     );
 
-    else if(pagetype === "edit")
+    else if(pagetype === "edit" && page === "teacher")
         return (
 
 
@@ -178,6 +178,248 @@ const App = ({submitfunc,pagetype, olddata}) => {
                             name="ttel"
                             label="电话"
                             rules={[{ required: true, message: '请输入电话' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        {/* 更多表单项... */}
+                    </Form>
+                </Modal>
+            </>
+        );
+
+    else if(pagetype === "edit" && page === "student")
+        return (
+
+
+            <>
+                <Flex justify="end" gap="middle">
+                    <Button
+                        type="primary"
+                        onClick={() => setOpen(true)}
+                    >
+                        {text}
+                    </Button>
+                </Flex>
+
+                <Modal
+                    title="新增数据"
+                    open={open}
+                    onOk={handleSubmit}
+                    onCancel={() => setOpen(false)}
+                    destroyOnClose
+                >
+                    <Form form={form} layout="vertical">
+                        <Form.Item
+                            name="sno"//最后提交数据对象中的键
+                            label="工号"
+                            rules={[{ required: true}]}
+                        >
+                            <Input disabled/>
+                        </Form.Item>
+                        <Form.Item
+                            name="sname"//最后提交数据对象中的键
+                            label="姓名"
+                            rules={[{ required: true, message: '请输入姓名' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="saccount"
+                            label="账号"
+                            rules={[{ required: true, message: '请输入账号' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="spwd"
+                            label="密码"
+                            rules={[{ required: true, message: '请输入密码' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="stel"
+                            label="电话"
+                            rules={[{ required: true, message: '请输入电话' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        {/* 更多表单项... */}
+                    </Form>
+                </Modal>
+            </>
+        );
+
+    else if(pagetype === "add" && page === "student")
+        return (
+
+
+            <>
+                <Flex justify="end" gap="middle">
+                    <Button
+                        type="primary"
+                        onClick={() => setOpen(true)}
+                    >
+                        {text}
+                    </Button>
+                </Flex>
+
+                <Modal
+                    title="新增数据"
+                    open={open}
+                    onOk={handleSubmit}
+                    onCancel={() => setOpen(false)}
+                    destroyOnClose
+                >
+                    <Form form={form} layout="vertical">
+                        <Form.Item
+                            name="sno"//最后提交数据对象中的键
+                            label="学号"
+                            rules={[{ required: true, message: '请输入学号'}]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="sname"//最后提交数据对象中的键
+                            label="姓名"
+                            rules={[{ required: true, message: '请输入姓名' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="saccount"
+                            label="账号"
+                            rules={[{ required: true, message: '请输入账号' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="spwd"
+                            label="密码"
+                            rules={[{ required: true, message: '请输入密码' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="stel"
+                            label="电话"
+                            rules={[{ required: true, message: '请输入电话' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        {/* 更多表单项... */}
+                    </Form>
+                </Modal>
+            </>
+        );
+
+    else if(pagetype === "edit" && page === "course")
+        return (
+
+
+            <>
+                <Flex justify="end" gap="middle">
+                    <Button
+                        type="primary"
+                        onClick={() => setOpen(true)}
+                    >
+                        {text}
+                    </Button>
+                </Flex>
+
+                <Modal
+                    title="新增数据"
+                    open={open}
+                    onOk={handleSubmit}
+                    onCancel={() => setOpen(false)}
+                    destroyOnClose
+                >
+                    <Form form={form} layout="vertical">
+                        <Form.Item
+                            name="cno"//最后提交数据对象中的键
+                            label="课程号"
+                            rules={[{ required: true, message: '请输入课程号' }]}
+                        >
+                            <Input disabled/>
+                        </Form.Item>
+                        <Form.Item
+                            name="cname"//最后提交数据对象中的键
+                            label="课程名"
+                            rules={[{ required: true, message: '请输入课程名' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="csdate"
+                            label="开始时间"
+                            rules={[{ required: true, message: '请输入开始时间' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="cedate"
+                            label="结束时间"
+                            rules={[{ required: true, message: '请输入结束时间' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        {/* 更多表单项... */}
+                    </Form>
+                </Modal>
+            </>
+        );
+
+    else if(pagetype === "add" && page === "course")
+        return (
+
+
+            <>
+                <Flex justify="end" gap="middle">
+                    <Button
+                        type="primary"
+                        onClick={() => setOpen(true)}
+                    >
+                        {text}
+                    </Button>
+                </Flex>
+
+                <Modal
+                    title="新增数据"
+                    open={open}
+                    onOk={handleSubmit}
+                    onCancel={() => setOpen(false)}
+                    destroyOnClose
+                >
+                    <Form form={form} layout="vertical">
+                        <Form.Item
+                            name="cno"//最后提交数据对象中的键
+                            label="课程号"
+                            rules={[{ required: true, message: '请输入课程号' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="cname"//最后提交数据对象中的键
+                            label="课程名"
+                            rules={[{ required: true, message: '请输入课程名' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="csdate"
+                            label="开始时间"
+                            rules={[{ required: true, message: '请输入开始时间' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="cedate"
+                            label="结束时间"
+                            rules={[{ required: true, message: '请输入结束时间' }]}
                         >
                             <Input />
                         </Form.Item>

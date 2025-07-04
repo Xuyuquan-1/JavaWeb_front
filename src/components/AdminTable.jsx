@@ -79,7 +79,7 @@ const studentcolumns = (handleDelete, handleEdit) => [
                 >
                     删除
                 </Button>
-                <ComponentDialog submitfunc={handleEdit} pagetype={"edit"} olddata={record}/>
+                <ComponentDialog submitfunc={handleEdit} pagetype={"edit"} page={"student"} olddata={record}/>
             </div>
         )
     }
@@ -140,7 +140,7 @@ const teachercolumns = (handleDelete, handleEdit) => [
                 >
                     删除
                 </Button>
-                <ComponentDialog submitfunc={handleEdit} pagetype={"edit"} olddata={record}/>
+                <ComponentDialog submitfunc={handleEdit} pagetype={"edit"} page={"teacher"} olddata={record}/>
             </div>
         )
     }
@@ -189,7 +189,7 @@ const coursecolumns = (handleDelete,handleEdit) => [
             >
                 删除
             </Button>
-                <ComponentDialog submitfunc={handleEdit} pagetype={"edit"} olddata={record}/>
+                <ComponentDialog submitfunc={handleEdit} pagetype={"edit"} page={"course"} olddata={record}/>
             </div>
         )
     }
@@ -307,6 +307,7 @@ const App = ({page,searchvalue, dialogvalues}) => {
 
     },[searchText]);
 
+    //删除回调
     const handleDelete = (no) => {
         console.log("success: handledelete",no);
         const deletedata = async() => {
@@ -327,6 +328,7 @@ const App = ({page,searchvalue, dialogvalues}) => {
         deletedata();
     }
 
+    //编辑回调
     const handleEdit = (record) => { // record包含三个字段taccount， tpwd， ttel
         console.log("handleEdit",record);
         const editdata = async() => {
