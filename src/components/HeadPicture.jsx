@@ -3,7 +3,8 @@ import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Flex, Typography } from 'antd';
 
 const App = () => {
-    const username = "管理员"; // 替换为实际用户名
+    const user = sessionStorage.getItem('name');
+    const username = user; // 替换为实际用户名
 
     return (
         <div style={{ width: '100%' }}>

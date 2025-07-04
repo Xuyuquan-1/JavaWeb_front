@@ -12,12 +12,16 @@ import {
     VideoCameraOutlined,
 } from '@ant-design/icons';
 import {Button, Flex, Layout, Menu, theme} from 'antd';
+import Signin from "../signin/Signin.jsx";
 const { Header, Sider, Content } = Layout;
 const App = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [currentMenu, setCurrentMenu] = useState('score');
     const [searchvalue, setSearchvalue] = useState('');
     const [dialogValues, setDialogValues] = useState({});
+
+    if (sessionStorage.getItem("name" ) == null)
+        return <Signin />;
 
     const onSearch = (value) => {
         setSearchvalue(value)
@@ -73,7 +77,7 @@ const App = () => {
                             }}
                         />
                         <ComponentSearchInput fathertext={'请输入查找内容'} onSearch={onSearch}/>
-                        <ComponentHeadPicture />
+                        <ComponentHeadPicture/>
                     </Flex>
                 </Header>
                 <Content

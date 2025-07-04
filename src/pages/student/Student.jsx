@@ -11,6 +11,7 @@ import {
     VideoCameraOutlined,
 } from '@ant-design/icons';
 import {Button, Flex, Layout, Menu, theme} from 'antd';
+import Signin from "../signin/Signin.jsx";
 const { Header, Sider, Content } = Layout;
 const App = () => {
     const [collapsed, setCollapsed] = useState(false);
@@ -24,6 +25,9 @@ const App = () => {
         }
         console.log("切换标签：",currentMenu);
     }
+
+    if (sessionStorage.getItem("name" ) == null)
+        return <Signin />;
 
     const {
         token: { colorBgContainer, borderRadiusLG },

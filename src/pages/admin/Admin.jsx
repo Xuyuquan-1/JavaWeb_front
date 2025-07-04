@@ -12,6 +12,7 @@ import {
     VideoCameraOutlined,
 } from '@ant-design/icons';
 import {Button, Flex, Layout, Menu, theme} from 'antd';
+import Signin from "../signin/Signin.jsx";
 
 
 const { Header, Sider, Content } = Layout;
@@ -25,6 +26,9 @@ const App = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
+
+    if (sessionStorage.getItem("name" ) == null)
+        return <Signin />;
 
     const MenuChange = (menuInfo) => {
         switch(menuInfo.key) {

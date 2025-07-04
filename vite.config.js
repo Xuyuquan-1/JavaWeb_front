@@ -15,7 +15,10 @@ export default defineConfig({
       input: {
         index: resolve(__dirname, 'index.html'),
         test: resolve(__dirname, 'serialtest.html'),
-        admin: resolve(__dirname, 'admin.html')
+        admin: resolve(__dirname, 'admin.html'),
+        teacher: resolve(__dirname, 'teacher.html'),
+        student: resolve(__dirname, 'student.html'),
+        signin: resolve(__dirname, 'signin.html'),
       },
     },
   }

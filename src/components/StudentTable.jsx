@@ -43,28 +43,28 @@ const scorecolumns = [
         key: 'score',
         width: 150,
     },
-    {
-        title: 'Action',
-        key: 'end',
-        fixed: 'right',
-        width: 100,
-        // render: () => <a>action</a>,
-        render: () => <MyButton fathercolor={'blue'} fathertext={'删除'}/>,
-    },
+    // {
+    //     title: 'Action',
+    //     key: 'end',
+    //     fixed: 'right',
+    //     width: 100,
+    //     // render: () => <a>action</a>,
+    //     // render: () => <MyButton fathercolor={'blue'} fathertext={'删除'}/>,
+    // },
 ];
 
 const App = ({page}) => {
     const { styles } = useStyle();
     const [dataSource, setDataSource] = useState([]); // 替换原有的 const dataSource
     const [loading, setLoading] = useState(false); // 加载状态
-    const [pageUrl, setPageUrl] = useState('http://localhost:8080/untitled/selectlearn');
+    const [pageUrl, setPageUrl] = useState('http://localhost:8080/untitled/selectpersonalscore');
 
     //[teachercolumns, studentcolumns, coursecolumns]
     const [secondpage, setSecondpage] = useState(scorecolumns);
 
     useEffect(() => {
         switch(page) {
-            case 'score': setSecondpage(scorecolumns); setPageUrl('http://localhost:8080/untitled/selectlearn'); break;
+            case 'score': setSecondpage(scorecolumns); setPageUrl('http://localhost:8080/untitled/selectpersonalscore'); break;
 
             default: setSecondpage(scorecolumns);
         }
@@ -78,7 +78,7 @@ const App = ({page}) => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(pageUrl);
+                const response = await axios.get(pageUrl+"?name="+`${sessionStorage.getItem('name')}`);
                 //赋值
                 setDataSource(
                     // response.data.data
