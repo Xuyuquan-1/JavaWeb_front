@@ -1,16 +1,33 @@
 import {Modal, Form, Input, Button, Flex} from 'antd';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 // import axios from "axios";
 
-const App = ({submitfunc}) => {
+const App = ({submitfunc,pagetype, olddata}) => {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
+
+    let text = "";
+
+    if (pagetype === "edit") {
+        text = "修改";
+    }
+    else if(pagetype === "add")
+        text = "增加";
+
 
 
     //向后端发送添加信息hook
 
         //
     let URL = "http://localhost:8080/untitled";
+
+    useEffect(() => {
+        if (open && pagetype === "edit" && olddata) {
+            form.setFieldsValue(olddata); // 预填编辑表单
+        } else if (open && pagetype === "add") {
+            form.resetFields(); // 清空新增表单
+        }
+    }, [open, pagetype, olddata]);
 
 
 
@@ -44,6 +61,7 @@ const App = ({submitfunc}) => {
         }
     };
 
+    if(pagetype === "add")
     return (
 
 
@@ -53,7 +71,7 @@ const App = ({submitfunc}) => {
                     type="primary"
                     onClick={() => setOpen(true)}
                 >
-                    增加
+                    {text}
                 </Button>
             </Flex>
 
@@ -112,6 +130,63 @@ const App = ({submitfunc}) => {
             </Modal>
         </>
     );
+
+    else if(pagetype === "edit")
+        return (
+
+
+            <>
+                <Flex justify="end" gap="middle">
+                    <Button
+                        type="primary"
+                        onClick={() => setOpen(true)}
+                    >
+                        {text}
+                    </Button>
+                </Flex>
+
+                <Modal
+                    title="新增数据"
+                    open={open}
+                    onOk={handleSubmit}
+                    onCancel={() => setOpen(false)}
+                    destroyOnClose
+                >
+                    <Form form={form} layout="vertical">
+                        <Form.Item
+                            name="tno"//最后提交数据对象中的键
+                            label="工号"
+                            rules={[{ required: true}]}
+                        >
+                            <Input disabled/>
+                        </Form.Item>
+                        <Form.Item
+                            name="taccount"//最后提交数据对象中的键
+                            label="账号"
+                            rules={[{ required: true, message: '请输入账号' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="tpwd"
+                            label="密码"
+                            rules={[{ required: true, message: '请输入密码' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            name="ttel"
+                            label="电话"
+                            rules={[{ required: true, message: '请输入电话' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        {/* 更多表单项... */}
+                    </Form>
+                </Modal>
+            </>
+        );
 };
 
 export default App;

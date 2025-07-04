@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import { Table } from 'antd';
+import {Button, Modal, Table} from 'antd';
 import { createStyles } from 'antd-style';
 import { default as MyButton } from './Button.jsx';
 import axios from 'axios';
+import {default as ComponentDialog } from './Dialog.jsx';
 
 const useStyle = createStyles(({ css, token }) => {
     const { antCls } = token;
@@ -29,7 +30,7 @@ function formatDate(timestamp) {
 
 
 
-const studentcolumns = [
+const studentcolumns = (handleDelete, handleEdit) => [
     {
         title: '学号',
         width: 150,
@@ -67,11 +68,23 @@ const studentcolumns = [
         key: 'end',
         fixed: 'right',
         width: 100,
-        // render: () => <a>action</a>,
-        render: () => <MyButton fathercolor={'blue'} fathertext={'删除'}/>,
-    },
+        render: (_, record) => (
+            <div style={{ display: 'flex', gap: '8px' }}>
+                <Button
+                    type="primary"
+                    onClick={() => {
+                        console.log(record.sno);
+                        handleDelete(record.sno);
+                    }}
+                >
+                    删除
+                </Button>
+                <ComponentDialog submitfunc={handleEdit} pagetype={"edit"} olddata={record}/>
+            </div>
+        )
+    }
 ];
-const teachercolumns = [
+const teachercolumns = (handleDelete, handleEdit) => [
     {
         title: '教授学科',
         width: 150,
@@ -116,12 +129,24 @@ const teachercolumns = [
         key: 'end',
         fixed: 'right',
         width: 100,
-        // render: () => <a>action</a>,
-        render: () => <MyButton fathercolor={'blue'} fathertext={'删除'}/>,
-    },
+        render: (_, record) => (
+            <div style={{ display: 'flex', gap: '8px' }}>
+                <Button
+                    type="primary"
+                    onClick={() => {
+                        console.log("查看教师: ",record.tno);
+                        handleDelete(record.tno);
+                    }}
+                >
+                    删除
+                </Button>
+                <ComponentDialog submitfunc={handleEdit} pagetype={"edit"} olddata={record}/>
+            </div>
+        )
+    }
 ];
 
-const coursecolumns = [
+const coursecolumns = (handleDelete,handleEdit) => [
         {
             title: '课程号',
             width: 150,
@@ -148,14 +173,26 @@ const coursecolumns = [
             key: 'cedate',
             width: 150,
         },
-        {
-            title: 'Action',
-            key: 'end',
-            fixed: 'right',
-            width: 100,
-            // render: () => <a>action</a>,
-            render: () => <MyButton fathercolor={'blue'} fathertext={'删除'}/>,
-        },
+    {
+        title: 'Action',
+        key: 'end',
+        fixed: 'right',
+        width: 100,
+        render: (_, record) => (
+            <div style={{ display: 'flex', gap: '8px' }}>
+            <Button
+                type="primary"
+                onClick={() => {
+                    console.log("查看课程: ",record.cno);
+                    handleDelete(record.cno);
+                }}
+            >
+                删除
+            </Button>
+                <ComponentDialog submitfunc={handleEdit} pagetype={"edit"} olddata={record}/>
+            </div>
+        )
+    }
     ];
 
 const App = ({page,searchvalue, dialogvalues}) => {
@@ -163,17 +200,20 @@ const App = ({page,searchvalue, dialogvalues}) => {
     const [dataSource, setDataSource] = useState([]); // 替换原有的 const dataSource
     const [loading, setLoading] = useState(false); // 加载状态
     const [pageUrl, setPageUrl] = useState('http://localhost:8080/untitled/selectteacher');
+
+
+
     //点击搜索
     let searchText = searchvalue;
     //[teachercolumns, studentcolumns, coursecolumns]
-    const [secondpage, setSecondpage] = useState(teachercolumns);
+    const [secondpage, setSecondpage] = useState(()=>teachercolumns);
 
     useEffect(() => {
         switch(page) {
-            case 'teacher': setSecondpage(teachercolumns); setPageUrl('http://localhost:8080/untitled/selectteacher'); break;
-            case 'student': setSecondpage(studentcolumns);setPageUrl('http://localhost:8080/untitled/selectstudent'); break;
-            case 'course': setSecondpage(coursecolumns); setPageUrl('http://localhost:8080/untitled/selectcourse'); break;
-            default: setSecondpage(teachercolumns);
+            case 'teacher': setSecondpage(()=>teachercolumns); setPageUrl('http://localhost:8080/untitled/selectteacher'); break;
+            case 'student': setSecondpage(()=>studentcolumns);setPageUrl('http://localhost:8080/untitled/selectstudent'); break;
+            case 'course': setSecondpage(()=>coursecolumns); setPageUrl('http://localhost:8080/untitled/selectcourse'); break;
+            default: setSecondpage(()=>teachercolumns);
         }
     }, [page]);
 
@@ -267,10 +307,51 @@ const App = ({page,searchvalue, dialogvalues}) => {
 
     },[searchText]);
 
+    const handleDelete = (no) => {
+        console.log("success: handledelete",no);
+        const deletedata = async() => {
+            try {
+                setLoading(true);
+                const response = await axios.get(baseUrl+'del'+`${page}`+`?delno=${no}`);
+                console.log("response",response);
+                setDataSource(()=> {
+                    return response.data.data;
+                })
+            } catch (error) {
+                console.error('Error searching data:', error);
+                console.log("searchInput fault！！！");
+            } finally {
+                setLoading(false);
+            }
+        };
+        deletedata();
+    }
+
+    const handleEdit = (record) => { // record包含三个字段taccount， tpwd， ttel
+        console.log("handleEdit",record);
+        const editdata = async() => {
+            try {
+                setLoading(true);
+                const response = await axios.post(baseUrl+'edit'+`${page}`,record);
+                console.log("response",response);
+                setDataSource(()=> {
+                    return response.data.data;
+                })
+            } catch (error) {
+                console.error('Error editing data:', error);
+                console.log("searchInput fault！！！");
+            } finally {
+                setLoading(false);
+            }
+        };
+        editdata();
+    }
+
     return (
+
         <Table
             className={styles.customTable}
-            columns={secondpage}
+            columns={secondpage(handleDelete, handleEdit)}
             dataSource={dataSource}
             loading={loading}
             scroll={{ x: 'max-content', y: 51 * 13 }}
@@ -279,6 +360,7 @@ const App = ({page,searchvalue, dialogvalues}) => {
             rowKey={record => `${page}_${record.sno || record.tno || record.cno}`}
             // 示例生成 key: "student_20250001"、"teacher_1001"、"course_3001"
         />
+
     );
 };
 export default App;
